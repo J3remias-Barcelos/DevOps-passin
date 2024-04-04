@@ -33,3 +33,5 @@ jobs:
 
       run: |
         docker push j3remias/devops-passin:${{ steps.generate_sha.outputs.sha }}
+        docker tag j3remias/devops-passin:${{ steps.generate_sha.outputs.sha }} j3remias/devops-passin:latest
+        docker push j3remias/devops-passin:latest
