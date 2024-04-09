@@ -10,14 +10,14 @@ COPY package.json pnpm-lock.yaml ./
 
 RUN pnpm install
 
- FROM base as build 
+FROM base AS build
 
- WORKDIR /usr/src/app
+WORKDIR /usr/src/app
 
- COPY . . 
- COPY --from=dependencies /usr/src/app/node_modules ./node_modules
+COPY . .
+COPY --from=dependencies /usr/src/app/node_modules ./node_modules
 
- RUN pnpm build
+RUN pnpm build
 RUN pnpm prune --prod
 
 FROM node:20-alpine3.19 AS deploy
@@ -31,11 +31,8 @@ COPY --from=build /usr/src/app/node_modules ./node_modules
 COPY --from=build /usr/src/app/package.json ./package.json
 COPY --from=build /usr/src/app/prisma ./prisma
 
-ENV DATABASE_URL="file:./db.sqlite"
-ENV API_BASE_URL="http://localhost:3333"
-
 RUN pnpm prisma generate
 
-EXPOSE 3333
+EXPOSE 	3333
 
 CMD [ "pnpm", "start" ]
